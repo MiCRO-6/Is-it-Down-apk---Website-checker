@@ -21,9 +21,14 @@ jobs:
         python3 -m pip install --upgrade pip setuptools cython
         python3 -m pip install buildozer
 
+    - name: Accept Android SDK licenses
+      run: |
+        yes | buildozer android sdk
+
     - name: Build APK
       run: |
-        buildozer android debug
+        buildozer android clean
+        yes | buildozer android debug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
