@@ -18,18 +18,31 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python3-pip python3-dev git zip unzip openjdk-17-jdk \
-            autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libffi-dev
+            autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libffi-dev wget
         python3 -m pip install --upgrade pip setuptools cython
         python3 -m pip install buildozer
 
-    - name: Set up Android SDK
+    - name: Install Android SDK Command Line Tools
       run: |
-        mkdir -p $HOME/.buildozer/android/platform
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+        unzip cmdline-tools.zip
+        mv cmdline-tools latest
+        rm cmdline-tools.zip
+
+        echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
+
+    - name: Accept Android Licenses & Install SDK Packages
+      run: |
+        source $GITHUB_ENV
         yes | sdkmanager --licenses
         sdkmanager "platforms;android-33" "platform-tools" "build-tools;33.0.2"
 
     - name: Build APK
       run: |
+        source $GITHUB_ENV
         buildozer android clean
         yes | buildozer android debug
 
