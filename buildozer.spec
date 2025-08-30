@@ -8,3 +8,7 @@ requirements = python3,kivy,requests,dnspython
 orientation = portrait
 source.main = main.py
 version = 0.1
+android.sdk = 33
+android.ndk = 25b
+android.ndk_api = 21
+android.build_tools = 33.0.2
