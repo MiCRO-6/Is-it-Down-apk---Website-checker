@@ -31,11 +31,16 @@ jobs:
         yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
         yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "platform-tools" "build-tools;33.0.2"
 
+    - name: Initialize Buildozer
+      run: |
+        export ANDROIDSDK=$HOME/android-sdk
+        export PATH=$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$PATH
+        buildozer android debug --dry-run
+
     - name: Build APK
       run: |
         export ANDROIDSDK=$HOME/android-sdk
         export PATH=$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$PATH
-        buildozer android clean
         yes | buildozer android debug
 
     - name: Upload APK
