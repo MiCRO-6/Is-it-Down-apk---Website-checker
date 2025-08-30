@@ -21,16 +21,18 @@ jobs:
         python3 -m pip install --upgrade pip setuptools cython
         python3 -m pip install buildozer
 
+    - name: Initialize Buildozer (download SDK/NDK)
+      run: |
+        buildozer android debug || true
+
     - name: Accept Android SDK licenses
       run: |
-        yes | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-
-
+        yes | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
     - name: Build APK
       run: |
         buildozer android clean
-        yes | buildozer android debug
+        buildozer android debug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
